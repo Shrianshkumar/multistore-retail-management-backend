@@ -2,6 +2,7 @@ package configuration;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,8 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -32,7 +35,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .exceptionHandling(
                         exceptionHandler -> exceptionHandler
-                                .authenticationEntryPoint(customAuthenticationEntryPoint))
+                                .authenticationEntryPoint(authenticationEntryPoint))
                 .build();
     }
 
