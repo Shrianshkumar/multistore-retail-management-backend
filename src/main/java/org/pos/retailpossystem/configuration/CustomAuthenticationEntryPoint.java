@@ -1,4 +1,4 @@
-package configuration;
+package org.pos.retailpossystem.configuration;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

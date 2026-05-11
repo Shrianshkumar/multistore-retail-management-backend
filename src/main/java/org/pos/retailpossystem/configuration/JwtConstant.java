@@ -1,4 +1,4 @@
-package configuration;
+package org.pos.retailpossystem.configuration;
 
 public class JwtConstant {
  

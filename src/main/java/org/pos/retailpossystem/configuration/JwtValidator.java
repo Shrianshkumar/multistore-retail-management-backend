@@ -1,4 +1,4 @@
-package configuration;
+package org.pos.retailpossystem.configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
