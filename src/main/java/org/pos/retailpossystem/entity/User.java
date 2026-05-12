@@ -35,6 +35,12 @@ public class User {
 
     private String phone;
 
+    @ManyToOne
+    private Store store;
+
+    @ManyToOne
+    private Branch branch;
+
     @Column(nullable = false)
     @NotNull(message = "Role is mandatory")
     private UserRole role;
