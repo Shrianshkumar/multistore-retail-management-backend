@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StoreMapper {
-    public static StoreDto toDto(Store store) {
+    public static StoreDto mapToDto(Store store) {
         return StoreDto.builder()
                 .id(store.getId())
-                .brand(store.getBrand())
+                .storeName(store.getStoreName())
                 .storeAdminId(store.getStoreAdmin() != null ? store.getStoreAdmin().getId() : null)
                 .storeAdmin(UserMapper.toDTO(store.getStoreAdmin()))
                 .storeType(store.getStoreType())
@@ -22,10 +22,10 @@ public class StoreMapper {
                 .build();
     }
 
-    public static Store toEntity(StoreDto dto, User storeAdmin) {
+    public static Store mapToEntity(StoreDto dto, User storeAdmin) {
         return Store.builder()
                 .id(dto.getId())
-                .brand(dto.getBrand())
+                .storeName(dto.getStoreName())
                 .storeAdmin(storeAdmin)
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())

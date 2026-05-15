@@ -20,8 +20,8 @@ public class Store {
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "brand name is required")
-    private String brand;
+    @NotBlank(message = "store name is required")
+    private String storeName;
 
     @OneToOne
     private User storeAdmin;

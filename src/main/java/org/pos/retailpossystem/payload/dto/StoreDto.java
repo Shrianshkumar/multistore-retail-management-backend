@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class StoreDto {
     private Long id;
-    private String brand;
+    private String storeName;
     private Long storeAdminId;
     private UserDto storeAdmin;
     private String storeType;
