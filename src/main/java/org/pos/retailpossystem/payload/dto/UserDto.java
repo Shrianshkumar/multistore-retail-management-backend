@@ -1,5 +1,7 @@
 package org.pos.retailpossystem.payload.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pos.retailpossystem.domain.enums.UserRole;
@@ -8,6 +10,8 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserDto {
     private Long id;
     private String email;
@@ -21,24 +25,4 @@ public class UserDto {
     private BranchDto branch;
     private String branchName;
     private LocalDateTime lastLogin;
-
-
-
-    public UserDto(Long id, String email, String fullName,
-                   UserRole role, String branchName,
-                   LocalDateTime lastLogin) {
-        this.id = id;
-        this.email = email;
-        this.fullName = fullName;
-        this.role = role;
-        this.password = null;
-        this.phone = null;
-        this.username = null;
-        this.storeId = null;
-        this.branchId = null;
-        this.branch = null;
-        this.branchName=branchName;
-        this.lastLogin=lastLogin;
-
-    }
 }

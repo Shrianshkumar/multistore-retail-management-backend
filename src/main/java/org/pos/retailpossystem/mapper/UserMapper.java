@@ -11,41 +11,62 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserMapper {
-    public static UserDto toDTO(User user) {
-        UserDto UserDto = new UserDto();
-        UserDto.setId(user.getId());
-        UserDto.setEmail(user.getEmail());
-        UserDto.setFullName(user.getFullName());
-        UserDto.setBranchId(user.getBranch()==null?null:user.getBranch().getId());
-        UserDto.setBranch(user.getBranch()==null?null: BranchMapper.toDto(user.getBranch()));
-        UserDto.setRole(user.getRole());
-        UserDto.setStoreId(user.getStore()==null?null:user.getStore().getId());
-        UserDto.setPhone(user.getPhone());
 
-        return UserDto;
+    public static UserDto mapToDto(User user) {
+
+        return UserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .storeId(
+                        user.getStore() == null
+                                ? null
+                                : user.getStore().getId()
+                )
+                .branchId(
+                        user.getBranch() == null
+                                ? null
+                                : user.getBranch().getId()
+                )
+                .branch(
+                        user.getBranch() == null
+                                ? null
+                                : BranchMapper.toDto(user.getBranch())
+                )
+                .branchName(
+                        user.getBranch() == null
+                                ? null
+                                : user.getBranch().getName()
+                )
+                .lastLogin(user.getLastLogin())
+                .build();
     }
 
-    public static List<UserDto> toDTOList(List<User> users) {
+    public static List<UserDto> mapToDtoList(List<User> users) {
+
         return users.stream()
-                .map(UserMapper::toDTO)
+                .map(UserMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    public static Set<UserDto> toDTOSet(Set<User> users) {
+    public static Set<UserDto> mapToDtoSet(Set<User> users) {
+
         return users.stream()
-                .map(UserMapper::toDTO)
+                .map(UserMapper::mapToDto)
                 .collect(Collectors.toSet());
     }
 
-    public static User toEntity(UserDto UserDto) {
-        User createdUser = new User();
-        createdUser.setEmail(UserDto.getEmail());
-        createdUser.setPassword(UserDto.getPassword());
-        createdUser.setCreatedAt(LocalDateTime.now());
-        createdUser.setPhone(UserDto.getPhone());
-        createdUser.setFullName(UserDto.getFullName());
-        createdUser.setRole(UserDto.getRole());
+    public static User toEntity(UserDto userDto) {
 
-        return createdUser;
+        return User.builder()
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .phone(userDto.getPhone())
+                .fullName(userDto.getFullName())
+                .role(userDto.getRole())
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 }
