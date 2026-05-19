@@ -12,7 +12,7 @@ public class StoreMapper {
                 .id(store.getId())
                 .storeName(store.getStoreName())
                 .storeAdminId(store.getStoreAdmin() != null ? store.getStoreAdmin().getId() : null)
-                .storeAdmin(UserMapper.toDTO(store.getStoreAdmin()))
+                .storeAdmin(UserMapper.mapToDto(store.getStoreAdmin()))
                 .storeType(store.getStoreType())
                 .description(store.getDescription())
                 .contact(store.getContact())
