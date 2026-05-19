@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
-    User getUserByEmail(String email) throws UserException;
-    User getUserById(Long id) throws UserException;
-    User getUserFromJwtToken(String token) throws UserException;
+    User getUserByEmail(String email);
+    User getUserById(Long userId);
+    User getUserFromJwtToken(String token);
     User getCurrentUser();
-    Set<User> getUserByRole(UserRole role) throws UserException;
-    List<User> getUsers() throws UserException;
+    Set<User> getUsersByRole(UserRole role);
+    List<User> getUsers();
 }
