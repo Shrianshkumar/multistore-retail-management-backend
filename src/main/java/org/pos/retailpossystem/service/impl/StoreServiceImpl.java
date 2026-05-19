@@ -166,7 +166,7 @@ public class StoreServiceImpl implements StoreService {
 
         User addedEmployee = userRepository.save(employee);
 
-        return UserMapper.toDTO(addedEmployee);
+        return UserMapper.mapToDto(addedEmployee);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class StoreServiceImpl implements StoreService {
             List<User> employees =
                     userRepository.findByStoreId(storeId);
 
-            return UserMapper.toDTOList(employees);
+            return UserMapper.mapToDtoList(employees);
         }
 
         throw new AccessDeniedException(
