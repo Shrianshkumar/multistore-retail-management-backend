@@ -1,76 +1,88 @@
 package org.pos.retailpossystem.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.pos.retailpossystem.configuration.JwtProvider;
 import org.pos.retailpossystem.domain.enums.UserRole;
 import org.pos.retailpossystem.entity.User;
-import org.pos.retailpossystem.exception.UserException;
 import org.pos.retailpossystem.mapper.UserMapper;
 import org.pos.retailpossystem.payload.dto.UserDto;
-import org.pos.retailpossystem.repository.UserRepo;
 import org.pos.retailpossystem.service.UserService;
-import org.pos.retailpossystem.service.impl.UserDetailsServiceImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
+    // Get Current User Profile
+    @GetMapping("/profile")
+    public ResponseEntity<UserDto> getUserProfile() {
 
-    @GetMapping("/api/users/profile")
-    public ResponseEntity<UserDto> getUserProfileFromJwtHandler(
-            @RequestHeader("Authorization") String jwt) throws UserException {
-        User user = userService.getUserFromJwtToken(jwt);
-        UserDto UserDto=UserMapper.toDTO(user);
+        User user = userService.getCurrentUser();
 
-        return new ResponseEntity<>(UserDto, HttpStatus.OK);
+        UserDto userDto = UserMapper.mapToDto(user);
+
+        return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/api/users/customer")
-    public ResponseEntity<Set<UserDto>> getCustomerList(
-            @RequestHeader("Authorization") String jwt) throws UserException {
-        Set<User> users = userService.getUserByRole(UserRole.ROLE_CUSTOMER);
-        Set<UserDto> UserDto=UserMapper.toDTOSet(users);
+    // Get Customers
+    @GetMapping("/customers")
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    public ResponseEntity<Set<UserDto>> getCustomerList() {
 
-        return new ResponseEntity<>(UserDto,HttpStatus.OK);
+        Set<User> users =
+                userService.getUsersByRole(UserRole.ROLE_CUSTOMER);
+
+        Set<UserDto> userDtoSet =
+                UserMapper.mapToDtoSet(users);
+
+        return ResponseEntity.ok(userDtoSet);
     }
 
-    @GetMapping("/api/users/cashier")
-    public ResponseEntity<Set<UserDto>> getCashierList(
-            @RequestHeader("Authorization") String jwt) throws UserException {
-        Set<User> users = userService.getUserByRole(UserRole.ROLE_BRANCH_CASHIER);
-        Set<UserDto> UserDto=UserMapper.toDTOSet(users);
+    // Get Cashiers
+    @GetMapping("/cashiers")
+    @PreAuthorize("hasAnyAuthority('ROLE_STORE_ADMIN', 'ROLE_BRANCH_MANAGER')")
+    public ResponseEntity<Set<UserDto>> getCashierList() {
 
-        return new ResponseEntity<>(UserDto,HttpStatus.OK);
+        Set<User> users =
+                userService.getUsersByRole(UserRole.ROLE_BRANCH_CASHIER);
+
+        Set<UserDto> userDtoSet =
+                UserMapper.mapToDtoSet(users);
+
+        return ResponseEntity.ok(userDtoSet);
     }
 
-    @GetMapping("/users/list")
-    public ResponseEntity<List<User>> getUsersListHandler(
-            @RequestHeader("Authorization") String jwt) throws UserException {
-        List<User> users = userService.getUsers();
+    // Get All Users
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    public ResponseEntity<List<UserDto>> getUsersList() {
 
-        return new ResponseEntity<>(users,HttpStatus.OK);
+        List<UserDto> users = userService.getUsers()
+                .stream()
+                .map(UserMapper::mapToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<UserDto> getUserByIdHandler(
-            @PathVariable Long userId
-    ) throws UserException {
+    // Get User By userId
+    @GetMapping("/{userId}")
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    public ResponseEntity<UserDto> getUserById(
+            @PathVariable Long userId) {
+
         User user = userService.getUserById(userId);
-        UserDto UserDto= UserMapper.toDTO(user);
 
-        return new ResponseEntity<>(UserDto,HttpStatus.OK);
+        UserDto userDto = UserMapper.mapToDto(user);
+
+        return ResponseEntity.ok(userDto);
     }
 }
