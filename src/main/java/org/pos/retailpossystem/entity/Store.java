@@ -34,6 +34,8 @@ public class Store {
 
     private String storeType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StoreStatus status;
 
     // Contact Information

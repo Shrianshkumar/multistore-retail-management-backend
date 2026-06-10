@@ -42,6 +42,7 @@ public class User {
     @ManyToOne
     private Branch branch;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull(message = "Role is mandatory")
     private UserRole role;
